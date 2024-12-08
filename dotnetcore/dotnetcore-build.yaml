@@ -1,0 +1,40 @@
+parameters:
+  - name: mainproect
+    type: string
+    default: '**/*.csproj'
+  - name: testproject
+    type: string
+    default: '**/*Test.csproj'
+  - name: runTests
+    type: boolean
+    default: true
+
+
+steps:
+  - task: DotNetCoreCLI@2
+    displayName: Build the code
+    inputs:
+      command: 'build'
+      projects: ${{ parameters.mainproect}}
+
+  - task: DotNetCoreCLI@2
+    displayName: 
+    inputs:
+      command: 'test'
+    # here we are writing condition when to runtest
+    condition: eq(${{ parameters.runTests }}, true)
+
+  - task: DotNetCoreCLI@2
+    displayName: "publish $(Build.Repository.Name)"
+    inputs:
+      command: 'publish'
+      publishWebProjects: false
+      projects: ${{ parameters.mainproect}}
+      arguments: '-o $(Build.ArtifactStagingDirectory)/Output'
+      zipAfterPublish: true
+      modifyOutputPath: true
+
+  - task: PublishBuildArtifacts@1
+    inputs:
+      pathToPublish: $(Build.ArtifactStagingDirectory)/Output'
+      artifactName: $(Build.Repository.Name)
