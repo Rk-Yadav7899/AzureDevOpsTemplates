@@ -1,0 +1,17 @@
+
+---
+pool: Default
+    
+variables:
+    - group: generic-java_maven
+  
+
+    
+steps:
+    - template: ./maven-build.yaml
+      parameters:
+        goal: $(goal)
+        specificVersion: ''
+        artifactsPath: '$(artifactPath)'
+        testResultsFiles: $(testResultsFiles)
+  
