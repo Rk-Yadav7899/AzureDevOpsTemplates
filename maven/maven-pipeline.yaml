@@ -1,7 +1,6 @@
 
 ---
-pool: Default
-    
+   
 variables:
     - group: generic-java_maven
   
